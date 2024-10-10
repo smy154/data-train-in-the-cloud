@@ -1,0 +1,66 @@
+============================= test session starts ==============================
+platform linux -- Python 3.10.6, pytest-8.3.3, pluggy-1.5.0 -- /home/smy154/.pyenv/versions/3.10.6/envs/taxifare-env/bin/python
+cachedir: .pytest_cache
+rootdir: /home/smy154/code/smy154/data-train-in-the-cloud/tests
+configfile: pytest_kitt.ini
+collecting ... collected 9 items / 1 deselected / 8 selected
+
+tests/cloud_training/test_cloud_data.py::TestCloudData::test_big_query_dataset_variable_exists PASSED [ 12%]
+tests/cloud_training/test_cloud_data.py::TestCloudData::test_cloud_data_create_dataset PASSED [ 25%]
+tests/cloud_training/test_cloud_data.py::TestCloudData::test_cloud_data_create_table PASSED [ 37%]
+tests/cloud_training/test_main.py::TestMain::test_route_preprocess PASSED [ 50%]
+tests/cloud_training/test_main.py::TestMain::test_route_train[local] PASSED [ 62%]
+tests/cloud_training/test_main.py::TestMain::test_route_train[gcs] PASSED [ 75%]
+tests/cloud_training/test_main.py::TestMain::test_route_evaluate FAILED  [ 87%]
+tests/cloud_training/test_main.py::TestMain::test_route_pred PASSED      [100%]
+
+=================================== FAILURES ===================================
+_________________________ TestMain.test_route_evaluate _________________________
+
+self = <tests.cloud_training.test_main.TestMain object at 0x7f06647d0d60>
+
+    @patch("taxifare.params.MODEL_TARGET", new='local')
+    def test_route_evaluate(self):
+        from taxifare.interface.main import evaluate
+    
+>       mae = evaluate(min_date=MIN_DATE, max_date=MAX_DATE)
+
+tests/cloud_training/test_main.py:107: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+taxifare/interface/main.py:198: in evaluate
+    data_processed = get_data_with_cache(
+taxifare/ml_logic/data.py:53: in get_data_with_cache
+    df = pd.read_csv(cache_path, header='infer' if data_has_header else None)
+../../../.pyenv/versions/3.10.6/envs/taxifare-env/lib/python3.10/site-packages/pandas/util/_decorators.py:211: in wrapper
+    return func(*args, **kwargs)
+../../../.pyenv/versions/3.10.6/envs/taxifare-env/lib/python3.10/site-packages/pandas/util/_decorators.py:331: in wrapper
+    return func(*args, **kwargs)
+../../../.pyenv/versions/3.10.6/envs/taxifare-env/lib/python3.10/site-packages/pandas/io/parsers/readers.py:950: in read_csv
+    return _read(filepath_or_buffer, kwds)
+../../../.pyenv/versions/3.10.6/envs/taxifare-env/lib/python3.10/site-packages/pandas/io/parsers/readers.py:605: in _read
+    parser = TextFileReader(filepath_or_buffer, **kwds)
+../../../.pyenv/versions/3.10.6/envs/taxifare-env/lib/python3.10/site-packages/pandas/io/parsers/readers.py:1442: in __init__
+    self._engine = self._make_engine(f, self.engine)
+../../../.pyenv/versions/3.10.6/envs/taxifare-env/lib/python3.10/site-packages/pandas/io/parsers/readers.py:1753: in _make_engine
+    return mapping[engine](f, **self.options)
+../../../.pyenv/versions/3.10.6/envs/taxifare-env/lib/python3.10/site-packages/pandas/io/parsers/c_parser_wrapper.py:79: in __init__
+    self._reader = parsers.TextReader(src, **kwds)
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+>   ???
+E   pandas.errors.EmptyDataError: No columns to parse from file
+
+pandas/_libs/parsers.pyx:554: EmptyDataError
+----------------------------- Captured stdout call -----------------------------
+[35m
+⭐️ Use case: evaluate[0m
+[34m
+Load latest model from local registry...[0m
+[34m
+Load latest model from disk...[0m
+✅ Model loaded from local disk
+[34m
+Load data from local CSV...[0m
+=========================== short test summary info ============================
+FAILED tests/cloud_training/test_main.py::TestMain::test_route_evaluate - pan...
+=========== 1 failed, 7 passed, 1 deselected, 19 warnings in 16.70s ============
